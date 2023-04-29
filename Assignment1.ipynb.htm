@@ -1,0 +1,1201 @@
+<html class=" mmtnhnfszf idc0_346"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><style>[_nghost-ooq-c52]{font-family:Open Sans,sans-serif;color:#121212}</style></head><body>{
+ "cells": [
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# First project\n",
+    "\n",
+    "As in every machine learning task we have to preprocess our 
+data.\n",
+    "\n",
+    "In most of the cases we start by using domain knowledge to prepare 
+the representatation more feasible to the machine learning model.\n",
+    "By doing so we usually reduce time and amount of labeled data 
+needed to train model of appropriate quality. "
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "0. Lets start by registering to the competition and downloading the
+ data.\n",
+    "\n",
+    "You can find the assignemnt here - 
+https://knowledgepit.ai/iml2023project1/ \\\n",
+    "The registration code is: `iml2023project1`\n",
+    "\n",
+    "Now we will load the initial data and the pool."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "initial_batch = pd.read_csv(\"initial_batch_dt.csv\")\n",
+    "pool_data = pd.read_csv(\"pool_dt.csv\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "frag                  bool\n",
+       "map_id              object\n",
+       "game_mode           object\n",
+       "moving_player        int64\n",
+       "player0_colour      object\n",
+       "player1_colour      object\n",
+       "player0_AI            bool\n",
+       "player1_AI            bool\n",
+       "hp_player0_unit1     int64\n",
+       "hp_player0_unit2     int64\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "initial_batch.dtypes[:10]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped="">\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "\n",
+       "  \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "  \n",
+       "  \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "  \n",
+       "<table class="\&quot;dataframe\&quot;" border="\&quot;1\&quot;"><thead><tr style="\&quot;text-align:" right;\"=""><th></th><th>frag</th><th>map_id</th><th>game_mode</th><th>moving_player</th><th>player0_colour</th><th>player1_colour</th><th>player0_AI</th><th>player1_AI</th><th>hp_player0_unit1</th><th>hp_player0_unit2</th><th>...</th><th>position_y_player1_unit3</th><th>position_y_player1_unit4</th><th>player0_unit1_type</th><th>player0_unit2_type</th><th>player0_unit3_type</th><th>player0_unit4_type</th><th>player1_unit1_type</th><th>player1_unit2_type</th><th>player1_unit3_type</th><th>player1_unit4_type</th></tr></thead><tbody><tr><th>0</th><td>True</td><td>Map03</td><td>Domination</td><td>0</td><td>#0000FF</td><td>#FF0000</td><td>False</td><td>False</td><td>0</td><td>0</td><td>...</td><td>-5.776100</td><td>-6.485828</td><td>Assault</td><td>Assault</td><td>Heavy</td><td>Scout</td><td>Assault</td><td>Assault</td><td>Heavy</td><td>Scout</td></tr><tr><th>1</th><td>False</td><td>Map18</td><td>Domination</td><td>1</td><td>#FF0000</td><td>#00FF00</td><td>True</td><td>True</td><td>70</td><td>100</td><td>...</td><td>8.077439</td><td>10.534909</td><td>Support</td><td>Assault</td><td>Heavy</td><td>Scout</td><td>Heavy</td><td>Heavy</td><td>Heavy</td><td>Scout</td></tr><tr><th>2</th><td>True</td><td>Map15</td><td>Domination</td><td>0</td><td>#FF0000</td><td>#00FF00</td><td>True</td><td>True</td><td>0</td><td>100</td><td>...</td><td>0.383224</td><td>-3.197381</td><td>Assault</td><td>Assault</td><td>Assault</td><td>Assault</td><td>Support</td><td>Heavy</td><td>Support</td><td>Heavy</td></tr><tr><th>3</th><td>False</td><td>Map14</td><td>Devastator</td><td>1</td><td>#FF0000</td><td>#00FF00</td><td>True</td><td>True</td><td>60</td><td>100</td><td>...</td><td>9.931442</td><td>5.132150</td><td>Scout</td><td>Assault</td><td>Assault</td><td>Assault</td><td>Heavy</td><td>Assault</td><td>Scout</td><td>Assault</td></tr><tr><th>4</th><td>False</td><td>Map06</td><td>Domination</td><td>1</td><td>#FF0C0C</td><td>#595EFF</td><td>False</td><td>False</td><td>100</td><td>140</td><td>...</td><td>-2.427895</td><td>-12.014837</td><td>Assault</td><td>Heavy</td><td>Scout</td><td>Support</td><td>Support</td><td>Assault</td><td>Heavy</td><td>Scout</td></tr></tbody></table>\n",
+       "<p>5 rows × 40 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "    frag map_id   game_mode  moving_player player0_colour player1_colour  \\\n",
+       "0   True  Map03  Domination              0        #0000FF        #FF0000   \n",
+       "1  False  Map18  Domination              1        #FF0000        #00FF00   \n",
+       "2   True  Map15  Domination              0        #FF0000        #00FF00   \n",
+       "3  False  Map14  Devastator              1        #FF0000        #00FF00   \n",
+       "4  False  Map06  Domination              1        #FF0C0C        #595EFF   \n",
+       "\n",
+       "   player0_AI  player1_AI  hp_player0_unit1  hp_player0_unit2  ...  \\\n",
+       "0       False       False                 0                 0  ...   \n",
+       "1        True        True                70               100  ...   \n",
+       "2        True        True                 0               100  ...   \n",
+       "3        True        True                60               100  ...   \n",
+       "4       False       False               100               140  ...   \n",
+       "\n",
+       "   position_y_player1_unit3  position_y_player1_unit4  player0_unit1_type  \\\n",
+       "0                 -5.776100                 -6.485828             Assault   \n",
+       "1                  8.077439                 10.534909             Support   \n",
+       "2                  0.383224                 -3.197381             Assault   \n",
+       "3                  9.931442                  5.132150               Scout   \n",
+       "4                 -2.427895                -12.014837             Assault   \n",
+       "\n",
+       "   player0_unit2_type  player0_unit3_type  player0_unit4_type  \\\n",
+       "0             Assault               Heavy               Scout   \n",
+       "1             Assault               Heavy               Scout   \n",
+       "2             Assault             Assault             Assault   \n",
+       "3             Assault             Assault             Assault   \n",
+       "4               Heavy               Scout             Support   \n",
+       "\n",
+       "   player1_unit1_type  player1_unit2_type  player1_unit3_type  \\\n",
+       "0             Assault             Assault               Heavy   \n",
+       "1               Heavy               Heavy               Heavy   \n",
+       "2             Support               Heavy             Support   \n",
+       "3               Heavy             Assault               Scout   \n",
+       "4             Support             Assault               Heavy   \n",
+       "\n",
+       "   player1_unit4_type  \n",
+       "0               Scout  \n",
+       "1               Scout  \n",
+       "2               Heavy  \n",
+       "3             Assault  \n",
+       "4               Scout  \n",
+       "\n",
+       "[5 rows x 40 columns]"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "initial_batch.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped="">\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "\n",
+       "  \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "  \n",
+       "  \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "  \n",
+       "<table class="\&quot;dataframe\&quot;" border="\&quot;1\&quot;"><thead><tr style="\&quot;text-align:" right;\"=""><th></th><th>frag</th><th>map_id</th><th>game_mode</th><th>moving_player</th><th>player0_colour</th><th>player1_colour</th><th>player0_AI</th><th>player1_AI</th><th>hp_player0_unit1</th><th>hp_player0_unit2</th><th>...</th><th>position_y_player1_unit3</th><th>position_y_player1_unit4</th><th>player0_unit1_type</th><th>player0_unit2_type</th><th>player0_unit3_type</th><th>player0_unit4_type</th><th>player1_unit1_type</th><th>player1_unit2_type</th><th>player1_unit3_type</th><th>player1_unit4_type</th></tr></thead><tbody><tr><th>0</th><td>NaN</td><td>Map02</td><td>Domination</td><td>0</td><td>#0000FF</td><td>#FF0000</td><td>False</td><td>False</td><td>0</td><td>0</td><td>...</td><td>-1.469301</td><td>-5.040119</td><td>Assault</td><td>Assault</td><td>Heavy</td><td>Scout</td><td>Assault</td><td>Assault</td><td>Heavy</td><td>Scout</td></tr><tr><th>1</th><td>NaN</td><td>Map13</td><td>Devastator</td><td>0</td><td>#FF0000</td><td>#00FF00</td><td>True</td><td>True</td><td>140</td><td>60</td><td>...</td><td>8.500000</td><td>8.500000</td><td>Heavy</td><td>Scout</td><td>Assault</td><td>Scout</td><td>Scout</td><td>Scout</td><td>Scout</td><td>Support</td></tr><tr><th>2</th><td>NaN</td><td>Map20</td><td>Devastator</td><td>0</td><td>#FF0000</td><td>#00FF00</td><td>True</td><td>True</td><td>60</td><td>140</td><td>...</td><td>-1.154944</td><td>3.839918</td><td>Scout</td><td>Heavy</td><td>Support</td><td>Scout</td><td>Heavy</td><td>Scout</td><td>Assault</td><td>Scout</td></tr><tr><th>3</th><td>NaN</td><td>Map23</td><td>Domination</td><td>0</td><td>#FF0000</td><td>#00FF00</td><td>True</td><td>True</td><td>140</td><td>0</td><td>...</td><td>11.929678</td><td>-9.573396</td><td>Heavy</td><td>Assault</td><td>Support</td><td>Heavy</td><td>Scout</td><td>Assault</td><td>Assault</td><td>Scout</td></tr><tr><th>4</th><td>NaN</td><td>Map19</td><td>Devastator</td><td>0</td><td>#FF0000</td><td>#00FF00</td><td>True</td><td>True</td><td>0</td><td>70</td><td>...</td><td>-3.700404</td><td>-4.659382</td><td>Scout</td><td>Support</td><td>Support</td><td>Assault</td><td>Scout</td><td>Scout</td><td>Scout</td><td>Scout</td></tr></tbody></table>\n",
+       "<p>5 rows × 40 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   frag map_id   game_mode  moving_player player0_colour player1_colour  \\\n",
+       "0   NaN  Map02  Domination              0        #0000FF        #FF0000   \n",
+       "1   NaN  Map13  Devastator              0        #FF0000        #00FF00   \n",
+       "2   NaN  Map20  Devastator              0        #FF0000        #00FF00   \n",
+       "3   NaN  Map23  Domination              0        #FF0000        #00FF00   \n",
+       "4   NaN  Map19  Devastator              0        #FF0000        #00FF00   \n",
+       "\n",
+       "   player0_AI  player1_AI  hp_player0_unit1  hp_player0_unit2  ...  \\\n",
+       "0       False       False                 0                 0  ...   \n",
+       "1        True        True               140                60  ...   \n",
+       "2        True        True                60               140  ...   \n",
+       "3        True        True               140                 0  ...   \n",
+       "4        True        True                 0                70  ...   \n",
+       "\n",
+       "   position_y_player1_unit3  position_y_player1_unit4  player0_unit1_type  \\\n",
+       "0                 -1.469301                 -5.040119             Assault   \n",
+       "1                  8.500000                  8.500000               Heavy   \n",
+       "2                 -1.154944                  3.839918               Scout   \n",
+       "3                 11.929678                 -9.573396               Heavy   \n",
+       "4                 -3.700404                 -4.659382               Scout   \n",
+       "\n",
+       "   player0_unit2_type  player0_unit3_type  player0_unit4_type  \\\n",
+       "0             Assault               Heavy               Scout   \n",
+       "1               Scout             Assault               Scout   \n",
+       "2               Heavy             Support               Scout   \n",
+       "3             Assault             Support               Heavy   \n",
+       "4             Support             Support             Assault   \n",
+       "\n",
+       "   player1_unit1_type  player1_unit2_type  player1_unit3_type  \\\n",
+       "0             Assault             Assault               Heavy   \n",
+       "1               Scout               Scout               Scout   \n",
+       "2               Heavy               Scout             Assault   \n",
+       "3               Scout             Assault             Assault   \n",
+       "4               Scout               Scout               Scout   \n",
+       "\n",
+       "   player1_unit4_type  \n",
+       "0               Scout  \n",
+       "1             Support  \n",
+       "2               Scout  \n",
+       "3               Scout  \n",
+       "4               Scout  \n",
+       "\n",
+       "[5 rows x 40 columns]"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pool_data.head()"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The frag column is the target for our model, so lets move it to distinct series."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "y = initial_batch['frag']\n",
+    "initial_batch = initial_batch.drop(columns='frag')\n",
+    "pool_data = pool_data.drop(columns='frag')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Index(['map_id', 'game_mode', 'moving_player', 'player0_colour',\n",
+       "       'player1_colour', 'player0_AI', 'player1_AI', 'hp_player0_unit1',\n",
+       "       'hp_player0_unit2', 'hp_player0_unit3', 'hp_player0_unit4',\n",
+       "       'hp_player1_unit1', 'hp_player1_unit2', 'hp_player1_unit3',\n",
+       "       'hp_player1_unit4', 'position_x_player0_unit1',\n",
+       "       'position_x_player0_unit2', 'position_x_player0_unit3',\n",
+       "       'position_x_player0_unit4', 'position_x_player1_unit1',\n",
+       "       'position_x_player1_unit2', 'position_x_player1_unit3',\n",
+       "       'position_x_player1_unit4', 'position_y_player0_unit1',\n",
+       "       'position_y_player0_unit2', 'position_y_player0_unit3',\n",
+       "       'position_y_player0_unit4', 'position_y_player1_unit1',\n",
+       "       'position_y_player1_unit2', 'position_y_player1_unit3',\n",
+       "       'position_y_player1_unit4', 'player0_unit1_type', 'player0_unit2_type',\n",
+       "       'player0_unit3_type', 'player0_unit4_type', 'player1_unit1_type',\n",
+       "       'player1_unit2_type', 'player1_unit3_type', 'player1_unit4_type'],\n",
+       "      dtype='object')"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "initial_batch.columns"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Let's now preprocess the data, our task is to predict if current player will score the kill in the current turn.\n",
+    "Therefore we will preprocess the data in the following way:\n",
+    "1. Transform all of the variables from player0 and player1 to the player moving in this turn and target player."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def transform_to_moving_target_player(data):\n",
+    "    # TODO: fill the code\n",
+    "    return data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped="">\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "\n",
+       "  \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "  \n",
+       "  \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "  \n",
+       "<table class="\&quot;dataframe\&quot;" border="\&quot;1\&quot;"><thead><tr style="\&quot;text-align:" right;\"=""><th></th><th>moving_player</th><th>hp_player0_unit1</th><th>hp_player1_unit1</th><th>hp_moving_unit1</th><th>hp_target_unit1</th></tr></thead><tbody><tr><th>0</th><td>0</td><td>0</td><td>100</td><td>0.0</td><td>100.0</td></tr><tr><th>1</th><td>1</td><td>70</td><td>140</td><td>140.0</td><td>70.0</td></tr><tr><th>2</th><td>0</td><td>0</td><td>70</td><td>0.0</td><td>70.0</td></tr><tr><th>3</th><td>1</td><td>60</td><td>140</td><td>140.0</td><td>60.0</td></tr><tr><th>4</th><td>1</td><td>100</td><td>70</td><td>70.0</td><td>100.0</td></tr></tbody></table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   moving_player  hp_player0_unit1  hp_player1_unit1  
+hp_moving_unit1  \\\n",
+       "0              0                 0               100            
+  0.0   \n",
+       "1              1                70               140            
+140.0   \n",
+       "2              0                 0                70            
+  0.0   \n",
+       "3              1                60               140            
+140.0   \n",
+       "4              1               100                70            
+ 70.0   \n",
+       "\n",
+       "   hp_target_unit1  \n",
+       "0            100.0  \n",
+       "1             70.0  \n",
+       "2             70.0  \n",
+       "3             60.0  \n",
+       "4            100.0  "
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# We expect the following columns 'moving' and 'target' instead of 
+player oriented columns \n",
+    
+"transform_to_moving_target_player(initial_batch).head()[['moving_player',
+ 'hp_player0_unit1', 'hp_player1_unit1', 'hp_moving_unit1', 
+'hp_target_unit1']]"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "2. Add counts of how many units are dead for moving and target 
+player. Add sum of all units health for moving and target player."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def add_dead_counts_and_total_hp(data):\n",
+    "    # TODO:\n",
+    "    return data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped="">\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "\n",
+       "  \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "  \n",
+       "  \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "  \n",
+       "<table class="\&quot;dataframe\&quot;" border="\&quot;1\&quot;"><thead><tr style="\&quot;text-align:" right;\"=""><th></th><th>moving_player_deads</th><th>target_player_deads</th><th>moving_player_total_hp</th><th>target_player_total_hp</th></tr></thead><tbody><tr><th>0</th><td>3</td><td>0</td><td>140</td><td>330</td></tr><tr><th>1</th><td>0</td><td>0</td><td>480</td><td>370</td></tr><tr><th>2</th><td>1</td><td>1</td><td>300</td><td>280</td></tr><tr><th>3</th><td>0</td><td>0</td><td>400</td><td>360</td></tr><tr><th>4</th><td>0</td><td>0</td><td>348</td><td>370</td></tr></tbody></table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   moving_player_deads  target_player_deads  
+moving_player_total_hp  \\\n",
+       "0                    3                    0                     
+140   \n",
+       "1                    0                    0                     
+480   \n",
+       "2                    1                    1                     
+300   \n",
+       "3                    0                    0                     
+400   \n",
+       "4                    0                    0                     
+348   \n",
+       "\n",
+       "   target_player_total_hp  \n",
+       "0                     330  \n",
+       "1                     370  \n",
+       "2                     280  \n",
+       "3                     360  \n",
+       "4                     370  "
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    
+"add_dead_counts_and_total_hp(initial_batch).head()[['moving_player_deads',
+ 'target_player_deads', 'moving_player_total_hp', 
+'target_player_total_hp']]"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "3. Create columns with euclidean distance between each unit of the 
+currently moving player to the enemy units.\n",
+    "\n",
+    "But with slight modification, if one of the units is dead let's 
+assign huge number to this distance, i.e. 1e6. \\\n",
+    "In the testing model representation the distance is also multiplied
+ by 50 to be consistent with map coordinates. \n",
+    "\n",
+    "Let's also create a column with distance multiplicated by health 
+target unit divided by 10.\n",
+    "In the testing model representation the weighted distance is also 
+multiplied by 50 to be consistent with map coordinates. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def add_units_distance(data):\n",
+    "    # TODO:\n",
+    "\n",
+    "    return data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped="">\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "\n",
+       "  \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "  \n",
+       "  \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "    \n",
+       "      \n",
+       "      \n",
+       "      \n",
+       "    \n",
+       "  \n",
+       "<table class="\&quot;dataframe\&quot;" border="\&quot;1\&quot;"><thead><tr style="\&quot;text-align:" right;\"=""><th></th><th>unit_distance_11</th><th>unit_weighted_distance_11</th></tr></thead><tbody><tr><th>0</th><td>1000000.000000</td><td>1.000000e+09</td></tr><tr><th>1</th><td>966.529613</td><td>6.765707e+03</td></tr><tr><th>2</th><td>1000000.000000</td><td>1.000000e+09</td></tr><tr><th>3</th><td>959.234638</td><td>5.755408e+03</td></tr><tr><th>4</th><td>1216.274452</td><td>1.216274e+04</td></tr></tbody></table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   unit_distance_11  unit_weighted_distance_11\n",
+       "0    1000000.000000               1.000000e+09\n",
+       "1        966.529613               6.765707e+03\n",
+       "2    1000000.000000               1.000000e+09\n",
+       "3        959.234638               5.755408e+03\n",
+       "4       1216.274452               1.216274e+04"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "add_units_distance(initial_batch).head()[['unit_distance_11', 'unit_weighted_distance_11']]"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "3. Drop the columns that are not needed:\n",
+    "- all columns with player1 or player0 in the name \n",
+    "- colour columns\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def drop_no_longer_needed_columns(data):\n",
+    "    # TODO\n",
+    "    return data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "initial_batch = drop_no_longer_needed_columns(initial_batch)"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "4. One hot encode categorical columns, make sure that numeric columns have numeric dtype"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.preprocessing import OneHotEncoder\n",
+    "\n",
+    "def one_hot_encode_categorical(data, one_hot_encoder=None):\n",
+    "    # TODO:\n",
+    "    return data, one_hot_encoder"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'numpy.ndarray'="">\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "moving_player        int64\n",
+       "moving_AI             bool\n",
+       "target_AI             bool\n",
+       "hp_moving_unit1    float64\n",
+       "hp_target_unit1    float64\n",
+       "hp_moving_unit2    float64\n",
+       "hp_target_unit2    float64\n",
+       "hp_moving_unit3    float64\n",
+       "hp_target_unit3    float64\n",
+       "hp_moving_unit4    float64\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "initial_batch, one_hot_encoder = one_hot_encode_categorical(initial_batch)\n",
+    "initial_batch.dtypes[:10]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def preprocess(data, one_hot_encoder=None):\n",
+    "    data = transform_to_moving_target_player(data)\n",
+    "    data = add_dead_counts_and_total_hp(data)\n",
+    "    data = add_units_distance(data)\n",
+    "    data= drop_no_longer_needed_columns(data)\n",
+    "    data, one_hot_encoder = one_hot_encode_categorical(data, one_hot_encoder)\n",
+    "    return data, one_hot_encoder"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'numpy.ndarray'="">\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "(5000, 121)"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pool_data, _ = preprocess(pool_data, one_hot_encoder)\n",
+    "pool_data.shape"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The model used for evaluation has exactly parameters like one below"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from xgboost import XGBClassifier\n",
+    "\n",
+    "model = XGBClassifier(n_estimators = 300,\n",
+    "                      max_depth = 8,\n",
+    "                      learning_rate = 0.01,\n",
+    "                      booster = 'gbtree',\n",
+    "                      objective = 'binary:logistic',\n",
+    "                      tree_method = 'exact',\n",
+    "                      min_child_weight = 1,\n",
+    "                      subsample = 1.0,\n",
+    "                      colsample_bytree = 1.0,\n",
+    "                      reg_alpha = 1,\n",
+    "                      reg_lambda = 5,\n",
+    "                      eval_metric = 'auc',\n",
+    "                      )\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: \"▸\";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: \"▾\";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: \"\";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: \"\";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: \"\";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="\&quot;sk-container-id-1\&quot;" class="\&quot;sk-top-container\&quot;"><div class="\&quot;sk-text-repr-fallback\&quot;"><pre>XGBClassifier(base_score=None, booster='gbtree', callbacks=None,\n",
+       "              colsample_bylevel=None, colsample_bynode=None,\n",
+       "              colsample_bytree=1.0, early_stopping_rounds=None,\n",
+       "              enable_categorical=False, eval_metric='auc', feature_types=None,\n",
+       "              gamma=None, gpu_id=None, grow_policy=None, importance_type=None,\n",
+       "              interaction_constraints=None, learning_rate=0.01, max_bin=None,\n",
+       "              max_cat_threshold=None, max_cat_to_onehot=None,\n",
+       "              max_delta_step=None, max_depth=8, max_leaves=None,\n",
+       "              min_child_weight=1, missing=nan, monotone_constraints=None,\n",
+       "              n_estimators=300, n_jobs=None, num_parallel_tree=None,\n",
+       "              predictor=None, random_state=None, ...)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="\&quot;sk-container\&quot;" hidden=""><div class="\&quot;sk-item\&quot;"><div class="\&quot;sk-estimator" sk-toggleable\"=""><input class="\&quot;sk-toggleable__control" sk-hidden--visually\"="" id="\&quot;sk-estimator-id-1\&quot;" type="\&quot;checkbox\&quot;" checked="checked"><label for="\&quot;sk-estimator-id-1\&quot;" class="\&quot;sk-toggleable__label" sk-toggleable__label-arrow\"="">XGBClassifier</label><div class="\&quot;sk-toggleable__content\&quot;"><pre>XGBClassifier(base_score=None, booster='gbtree', callbacks=None,\n",
+       "              colsample_bylevel=None, colsample_bynode=None,\n",
+       "              colsample_bytree=1.0, early_stopping_rounds=None,\n",
+       "              enable_categorical=False, eval_metric='auc', feature_types=None,\n",
+       "              gamma=None, gpu_id=None, grow_policy=None, importance_type=None,\n",
+       "              interaction_constraints=None, learning_rate=0.01, max_bin=None,\n",
+       "              max_cat_threshold=None, max_cat_to_onehot=None,\n",
+       "              max_delta_step=None, max_depth=8, max_leaves=None,\n",
+       "              min_child_weight=1, missing=nan, monotone_constraints=None,\n",
+       "              n_estimators=300, n_jobs=None, num_parallel_tree=None,\n",
+       "              predictor=None, random_state=None, ...)</pre></div></div></div></div></div>"
+      ],
+      "text/plain": [
+       "XGBClassifier(base_score=None, booster='gbtree', callbacks=None,\n",
+       "              colsample_bylevel=None, colsample_bynode=None,\n",
+       "              colsample_bytree=1.0, early_stopping_rounds=None,\n",
+       "              enable_categorical=False, eval_metric='auc', feature_types=None,\n",
+       "              gamma=None, gpu_id=None, grow_policy=None, importance_type=None,\n",
+       "              interaction_constraints=None, learning_rate=0.01, max_bin=None,\n",
+       "              max_cat_threshold=None, max_cat_to_onehot=None,\n",
+       "              max_delta_step=None, max_depth=8, max_leaves=None,\n",
+       "              min_child_weight=1, missing=nan, monotone_constraints=None,\n",
+       "              n_estimators=300, n_jobs=None, num_parallel_tree=None,\n",
+       "              predictor=None, random_state=None, ...)"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "model.fit(initial_batch, y)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "research",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.8"
+  },
+  "orig_nbformat": 4
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
+</class></class></body><app-content ng-version="14.2.0"></app-content></html>
